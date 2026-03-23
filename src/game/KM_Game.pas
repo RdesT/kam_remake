@@ -3111,7 +3111,7 @@ begin
       if gGame = nil then Exit;
 
       // In aggressive mode store a command every tick so we can find exactly when a replay mismatch occurs
-      if AGGRESSIVE_REPLAYS then
+      if DBG_AGGRESSIVE_REPLAYS then
         fGameInputProcess.CmdTemp(gicTempDoNothing); // do call cmd before SaveGameCheckpoint
 
       fSavePoints.LastTick := Max(fSavePoints.LastTick, fParams.Tick);
@@ -3193,7 +3193,7 @@ begin
     // Issue stored commands
     fGameInputProcess.ReplayTimer(fParams.Tick);
     // Used when need to run Runner replays sometimes (we could make replay at tick 1 and then need to 'simulate' gicTempDoNothing GIP cmd
-//    if AGGRESSIVE_REPLAYS and (fParams.Tick > 1) then
+//    if DBG_AGGRESSIVE_REPLAYS and (fParams.Tick > 1) then
 //      KaMRandom(MaxInt, 'TKMGameInputProcess.StoreCommand');
 
     CheckIfPieceTimeJustEnded; // Send warning messages about peacetime if required (peacetime sound should still be played in replays)
