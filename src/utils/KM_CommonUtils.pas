@@ -1850,7 +1850,7 @@ begin
   rightSide := Length(aStr);
   while (rightSide >= 1) and (aStr[rightSide] = aChar) do Dec(rightSide);
 
-  Result := Copy(aStr, leftSide, rightSide - leftSide + 1)
+  Result := Copy(aStr, leftSide, rightSide - leftSide + 1);
 end;
 
 
@@ -1873,6 +1873,7 @@ begin
   for I := Low(StrArray) to High(StrArray) do
     aStrings.Add(StrArray[I]);
 end;
+
 
 function StrSplitA(const aStr, aDelimiters: String): TAnsiStringArray;
 var
@@ -1942,6 +1943,7 @@ begin
   SetLength(Arr, ALength - 1);
 end;
 {$ELSE}
+
 
 procedure DeleteFromArray(var Arr: TAnsiStringArray; const Index: Integer);
 begin

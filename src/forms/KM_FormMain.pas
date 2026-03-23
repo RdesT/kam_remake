@@ -458,7 +458,7 @@ uses
 
 procedure ExportDone(aResourceName: String);
 begin
-  MessageDlg(Format(gResTexts[TX_RESOURCE_EXPORT_DONE_MSG], [aResourceName]), mtInformation, [mbOk], 0);
+  MessageDlg(Format(gResTexts[TX_RESOURCE_EXPORT_DONE_MSG], [aResourceName]), mtInformation, [mbOK], 0);
 end;
 
 
@@ -920,13 +920,13 @@ end;
 
 procedure TFormMain.Export_GUIClick(Sender: TObject);
 begin
-  fResExporter.ExportSpritesFromRXXToPNG(rxGUI, ExportDone);
+  fResExporter.ExportSpritesFromRXXToPNG(rxGui, ExportDone);
 end;
 
 
 procedure TFormMain.Export_GUIMainRXClick(Sender: TObject);
 begin
-  fResExporter.ExportSpritesFromRXXToPNG(rxGUIMain, ExportDone);
+  fResExporter.ExportSpritesFromRXXToPNG(rxGuiMain, ExportDone);
 end;
 
 
@@ -1504,11 +1504,9 @@ begin
                     showCtrls := True;
                     showGroupBox := True;
                   end;
-    else
-    begin
-      showCtrls := False;
-      showGroupBox := False;
-    end;
+  else
+    showCtrls := False;
+    showGroupBox := False;
   end;
 
 
@@ -1927,8 +1925,8 @@ function TFormMain.GetWindowParams: TKMWindowParamsRecord;
     {$IFDEF MSWINDOWS}
     var AppData: TAppBarData;
     // 'Shell_TrayWnd' is the name of the task bar's window
-    AppData.Hwnd := FindWindow('Shell_TrayWnd', nil);
-    if AppData.Hwnd <> 0 then
+    AppData.hWnd := FindWindow('Shell_TrayWnd', nil);
+    if AppData.hWnd <> 0 then
     begin
       AppData.cbSize := SizeOf(TAppBarData);
       // SHAppBarMessage will return False (0) when an error happens.
@@ -1990,7 +1988,6 @@ begin
 end;
 
 
-
 {$IFDEF MSWindows}
 procedure TFormMain.WMSysCommand(var Msg: TWMSysCommand);
 begin
@@ -2026,12 +2023,12 @@ var
 begin
   shiftState := [];
   {$IFDEF WDC}
-  uDevice := GET_DEVICE_LPARAM(Msg.lParam);
+  uDevice := GET_DEVICE_LPARAM(Msg.LParam);
   if uDevice = FAPPCOMMAND_MOUSE then
   begin
-    dwKeys := GET_KEYSTATE_LPARAM(Msg.lParam);
+    dwKeys := GET_KEYSTATE_LPARAM(Msg.LParam);
     shiftState := GetShiftState(dwKeys);
-    cmd := GET_APPCOMMAND_LPARAM(Msg.lParam);
+    cmd := GET_APPCOMMAND_LPARAM(Msg.LParam);
     case cmd of
        APPCOMMAND_BROWSER_FORWARD:  FormKeyUpProc(VK_XBUTTON1, shiftState);
        APPCOMMAND_BROWSER_BACKWARD: FormKeyUpProc(VK_XBUTTON2, shiftState);
@@ -2050,7 +2047,8 @@ procedure TFormMain.WndProc(var Message: TMessage);
 begin
   if (Message.Msg = WM_SYSCOMMAND)
   and (Message.WParam = SC_KEYMENU)
-  and SuppressAltForMenu then Exit;
+  and SuppressAltForMenu then
+    Exit;
 
   inherited;
 end;
@@ -2141,7 +2139,7 @@ begin
 
         key := Msg.wParam;
 
-        FormKeyDownProc(Key, shiftState, prevState = 0);
+        FormKeyDownProc(key, shiftState, prevState = 0);
       end;
   end;
 end;

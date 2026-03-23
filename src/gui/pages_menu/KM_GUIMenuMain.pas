@@ -36,7 +36,7 @@ uses
   KM_RenderUI;
 
 
-{ TKMGUIMenuMain }
+{ TKMMenuMain }
 constructor TKMMenuMain.Create(aParent: TKMPanel; aOnPageChange: TKMMenuChangeEventText);
 begin
   inherited Create(gpMainMenu);
@@ -49,9 +49,9 @@ begin
     TKMImage.Create(Panel_MainMenu, 300, 120, 423, 164, 4, rxGuiMain);
     TKMLabel.Create(Panel_MainMenu, 512, 300, 'Remake', fntMetal, taCenter);
 
-    with TKMImage.Create(Panel_MainMenu,  50, 220, round(218*1.3), round(291*1.3), 5, rxGuiMain) do
+    with TKMImage.Create(Panel_MainMenu,  50, 220, Round(218*1.3), Round(291*1.3), 5, rxGuiMain) do
       ImageStretch;
-    with TKMImage.Create(Panel_MainMenu, 705, 220, round(207*1.3), round(295*1.3), 6, rxGuiMain) do
+    with TKMImage.Create(Panel_MainMenu, 705, 220, Round(207*1.3), Round(295*1.3), 6, rxGuiMain) do
       ImageStretch;
 
     Panel_MMButtons := TKMPanel.Create(Panel_MainMenu, 337, 340, 350, 400);

@@ -724,7 +724,8 @@ begin
     if I <= fSelectedRoomInfo.GameInfo.PlayerCount then
     begin
       K := sortedNetPlayersIndexes[I];
-      if K = -1 then raise Exception.Create('Unexpected sorted value'); ;
+      if K = -1 then
+        raise Exception.Create('Unexpected sorted value');
 
       case fSelectedRoomInfo.GameInfo.Players[K].WonOrLost of
         wolNone: Image_MP_PlayerWolIcons[I].TexId := 0;
@@ -890,7 +891,7 @@ begin
   begin
     MP_UpdateStatus(err, icYellow, False);
     gSoundPlayer.Play(sfxnError);
-  end
+  end;
 end;
 
 

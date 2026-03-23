@@ -610,7 +610,7 @@ begin
     end;
     Id := gRes.Interpolation.Tree(aIndex, aAnimStep, gGameParams.TickFrac, aLoopAnim);
     Id0 := gMapElements[aIndex].Anim.Step[1] + 1;
-    if Id <= 0 then exit;
+    if Id <= 0 then Exit;
 
     var rxData: PRXData := @fRXData[rxTrees];
     pX := aLocX - 1;
@@ -1077,7 +1077,7 @@ var
   R: TRXData;
 begin
   id := gRes.Interpolation.UnitAction(aUnit, aAct, aDir, aStepId, gGameParams.TickFrac);
-  if id <= 0 then exit;
+  if id <= 0 then Exit;
   R := fRXData[rxUnits];
 
   // Eaters need to interpolate land height the same as the inn otherwise they are rendered at the wrong place
@@ -1537,8 +1537,8 @@ begin
     end;
 
   case gCursor.MapEdShape of
-    hsCircle: gRenderAux.CircleOnTerrain(round(F.X), round(F.Y), rad, $00000000,  $FFFFFFFF);
-    hsSquare: gRenderAux.SquareOnTerrain(round(F.X) - rad, round(F.Y) - rad, round(F.X + rad), round(F.Y) + rad, $FFFFFFFF);
+    hsCircle: gRenderAux.CircleOnTerrain(Round(F.X), Round(F.Y), rad, $00000000,  $FFFFFFFF);
+    hsSquare: gRenderAux.SquareOnTerrain(Round(F.X) - rad, Round(F.Y) - rad, Round(F.X + rad), Round(F.Y) + rad, $FFFFFFFF);
   end;
 end;
 
@@ -1568,8 +1568,8 @@ begin
     end;
 
   case gCursor.MapEdShape of
-    hsCircle: gRenderAux.CircleOnTerrain(round(F.X), round(F.Y), rad, $00000000,  $FFFFFFFF);
-    hsSquare: gRenderAux.SquareOnTerrain(round(F.X) - rad, round(F.Y) - rad, round(F.X + rad), round(F.Y) + rad, $FFFFFFFF);
+    hsCircle: gRenderAux.CircleOnTerrain(Round(F.X), Round(F.Y), rad, $00000000,  $FFFFFFFF);
+    hsSquare: gRenderAux.SquareOnTerrain(Round(F.X) - rad, Round(F.Y) - rad, Round(F.X + rad), Round(F.Y) + rad, $FFFFFFFF);
   end;
 end;
 
@@ -1715,7 +1715,7 @@ begin
                       RenderTile(192, P.X, P.Y, 0);
                     RenderWireTile(P, icCyan);
                   end;
-    cmEyeDropper: RenderWireTile(P, icCyan); // Cyan quad
+    cmEyedropper: RenderWireTile(P, icCyan); // Cyan quad
     cmRotateTile: RenderWireTile(P, icCyan); // Cyan quad
     cmElevate,
     cmEqualize:         RenderForegroundUI_ElevateEqualize;
