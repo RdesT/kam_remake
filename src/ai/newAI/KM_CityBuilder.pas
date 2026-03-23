@@ -42,7 +42,7 @@ type
     fStoneCrisis, fStoneShortage, fWoodShortage, fTrunkShortage, fGoldShortage: Boolean;
     fFreeWorkersCnt: Integer;
     fOwner: TKMHandID;
-    fBuildNodes: array of TBuildNode;
+    fBuildNodes: array of TBuildNode; //todo -cPractical: Replace with TList<TBuildNode>
     fWorkersPos: TKMPointArray;
 
     fPlanner: TKMCityPlanner;

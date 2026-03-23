@@ -403,7 +403,7 @@ procedure TKMHandLogistics.Save(SaveStream: TKMemoryStream);
 var
   I: Integer;
 begin
-  SaveStream.PlaceMarker('SerfList');
+  SaveStream.PlaceMarker('TKMHandLogistics');
 
   SaveStream.Write(fSerfCount);
   for I := 0 to fSerfCount - 1 do
@@ -417,7 +417,7 @@ procedure TKMHandLogistics.Load(LoadStream: TKMemoryStream);
 var
   I: Integer;
 begin
-  LoadStream.CheckMarker('SerfList');
+  LoadStream.CheckMarker('TKMHandLogistics');
 
   LoadStream.Read(fSerfCount);
   SetLength(fSerfs, fSerfCount);
@@ -613,6 +613,8 @@ constructor TKMDeliveries.Create(aHandIndex: TKMHandID);
 const
   INIT_BIDS_HEAP_SIZE = 100;
 begin
+  inherited Create;
+
   fOwner := aHandIndex;
 
   fRouteEvaluator := TKMDeliveryRouteEvaluator.Create;
@@ -626,9 +628,9 @@ end;
 
 destructor TKMDeliveries.Destroy;
 begin
-  fBestBids.Free;
-  fBestBidCandidates.Free;
-  fRouteEvaluator.Free;
+  FreeAndNil(fBestBids);
+  FreeAndNil(fBestBidCandidates);
+  FreeAndNil(fRouteEvaluator);
 
   inherited;
 end;
@@ -1765,6 +1767,7 @@ begin
   end;
 end;
 
+
 // Find best Demand for the given delivery. Could return same or nothing
 procedure TKMDeliveries.DeliveryFindBestDemand(aSerf: TKMUnitSerf; aDeliveryId: Integer; aWare: TKMWareType;
                                                out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aForceDelivery: Boolean);
@@ -2407,7 +2410,6 @@ begin
   end;
 
   SaveStream.PlaceMarker('Queue');
-
   SaveStream.Write(fQueueCount);
   for I := 0 to fQueueCount - 1 do
     with fQueue[I] do
@@ -2595,8 +2597,7 @@ end;
 
 
 {$IFDEF USE_HASH}
-{ TKMDeliveryBidKeyComparer }
-
+{ TKMDeliveryRouteBidKeyEqualityComparer }
 function TKMDeliveryRouteBidKeyEqualityComparer.Equals(const Left, Right: TKMDeliveryRouteBidKey): Boolean;
 begin
   // path keys are equal if they have same ends
@@ -2615,9 +2616,8 @@ var
   Value: Integer;
 begin
   Result := 17;
-  for Value in Values do begin
-    Result := Result*37 + Value;
-  end;
+  for Value in Values do
+    Result := Result * 37 + Value;
 end;
 {$IFDEF OverflowChecksEnabled}
   {$Q+}
@@ -2648,7 +2648,7 @@ begin
 end;
 
 
-{ TKMDeliveryCache }
+{ TKMDeliveryRouteCache }
 procedure TKMDeliveryRouteCache.Add(const aKey: TKMDeliveryRouteBidKey; const aValue: Single; const aRouteStep: TKMDeliveryRouteStep); //; const aTimeToLive: Word);
 var
   bid: TKMDeliveryRouteBid;
@@ -2701,10 +2701,10 @@ begin
       Exit(True); // We found value
   end;
 end;
-
 {$ENDIF}
 
-{ TKMDeliveryBidKey }
+
+{ TKMDeliveryRouteBidKey }
 function TKMDeliveryRouteBidKey.GetHashCode: Integer;
 var
   total: Int64;
@@ -2720,7 +2720,7 @@ begin
 end;
 
 
-{ TKMDeliveryBid }
+{ TKMDeliveryRouteBid }
 function TKMDeliveryRouteBid.GetTTL: Integer;
 begin
   Result := 0;
@@ -2938,7 +2938,6 @@ begin
   {$ENDIF}
 
   {$IFDEF USE_HASH}
-
   LoadStream.CheckMarker('DeliveryRouteEvaluator');
   LoadStream.Read(fUpdatesCnt);
   fBidsRoutesCache.Clear;
