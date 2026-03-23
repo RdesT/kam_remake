@@ -2676,8 +2676,10 @@ begin
   if not CACHE_DELIVERY_BIDS then Exit;
   {$ENDIF}
 
+  key := default(TKMDeliveryRouteBidKey);
   key.FromP := FromP;
   key.ToP := ToP;
+  //key.Pass is not initialized .. not sure if that is a bug or not
   bid.Value := aValue;
   bid.RouteStep := aKind;
   bid.CreatedAt := gGameParams.Tick;
