@@ -10,10 +10,10 @@ uses
   {$IFDEF USE_VIRTUAL_TREEVIEW}VirtualTrees, {$ENDIF}
 
   {$IFDEF USE_HASH}
-  Generics.Collections, Generics.Defaults, System.Hash,
+  System.Generics.Collections, System.Generics.Defaults, System.Hash,
   {$ENDIF}
-  Math,
-  KM_Units, KM_Houses, KM_ResHouses,
+  System.Math,
+  KM_Units, KM_Houses,
   KM_HandEntity, KM_HandTypes,
   KM_CommonClasses, KM_Defaults, KM_Points,
   BinaryHeapGen,
@@ -362,13 +362,13 @@ const
 
 implementation
 uses
-  Classes, SysUtils, TypInfo,
+  System.Classes, System.SysUtils, System.TypInfo,
   KM_Entity,
   KM_Terrain,
   KM_FormLogistics, KM_UnitTaskDelivery,
   KM_Main, KM_Game, KM_GameParams, KM_Hand, KM_HandsCollection, KM_HouseBarracks, KM_HouseStore,
   KM_UnitWarrior,
-  KM_Resource, KM_ResUnits,
+  KM_Resource, KM_ResHouses, KM_ResUnits,
   KM_Log, KM_Utils, KM_CommonUtils, KM_DevPerfLog, KM_DevPerfLogTypes;
 
 
@@ -388,6 +388,8 @@ const
 { TKMHandLogistics }
 constructor TKMHandLogistics.Create(aHandIndex: TKMHandID);
 begin
+  inherited Create;
+
   fQueue := TKMDeliveries.Create(aHandIndex);
 end;
 
@@ -395,6 +397,7 @@ end;
 destructor TKMHandLogistics.Destroy;
 begin
   FreeAndNil(fQueue);
+
   inherited;
 end;
 
