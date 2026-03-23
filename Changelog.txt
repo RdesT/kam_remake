@@ -20,6 +20,7 @@ KaM Remake Beta r_____ []
 + Minor corrections to the French translation
 + Fixed a bug where melee units fighting ranged and melee enemies would not assist each other against nearby ranged units
 + Included Changelog.txt into the build
++ Fixed fences not disappearing when building progress is added by a script (#258)
 
 
 KaM Remake Beta r16020 [2025.12.26]
