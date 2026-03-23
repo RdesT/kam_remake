@@ -58,7 +58,6 @@ type
       TextPos: TKMBriefingCorner;
     end;
 
-    constructor Create;
     destructor Destroy; override;
 
     procedure LoadCMP(const filePath: UnicodeString);
@@ -466,12 +465,6 @@ end;
 
 
 { TKMCampaignSpec }
-constructor TKMCampaignSpec.Create;
-begin
-  inherited;
-end;
-
-
 destructor TKMCampaignSpec.Destroy;
 begin
   FreeAndNil(fTextLib);
