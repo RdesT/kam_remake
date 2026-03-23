@@ -397,7 +397,7 @@ begin
   {$ENDIF}
   try
     for I := Low(fEventHandlers[aEventType]) to High(fEventHandlers[aEventType]) do
-      CallEventProc(fEventHandlers[aEventType][I], aParams, aFloatParam)
+      CallEventProc(fEventHandlers[aEventType][I], aParams, aFloatParam);
   finally
     {$IFDEF DBG_PERFLOG}
     gPerfLogs.SectionLeave(psScripting);
@@ -707,7 +707,7 @@ begin
   if MethodAssigned(evtHouseDeliveryModeChanged) then
   begin
     fIDCache.CacheHouse(aHouse, aHouse.UID); //Improves cache efficiency since aHouse will probably be accessed soon
-    CallEventHandlers(evtHouseDeliveryModeChanged, [aHouse.UID, ord(aOldMode), ord(aNewMode)]);
+    CallEventHandlers(evtHouseDeliveryModeChanged, [aHouse.UID, Ord(aOldMode), Ord(aNewMode)]);
   end;
 end;
 
@@ -1271,7 +1271,7 @@ begin
   if MethodAssigned(evtWoodcuttersModeChanged) then
   begin
     fIDCache.CacheHouse(aHouse, aHouse.UID); //Improves cache efficiency since aHouse will probably be accessed soon
-    CallEventHandlers(evtWoodcuttersModeChanged, [aHouse.UID, ord(aOldMode), ord(aNewMode)]);
+    CallEventHandlers(evtWoodcuttersModeChanged, [aHouse.UID, Ord(aOldMode), Ord(aNewMode)]);
   end;
 end;
 
