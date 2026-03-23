@@ -1874,43 +1874,42 @@ end;
 
 procedure TFormMain.ValidateGameStatsClick(Sender: TObject);
 var
-  MS: TKMemoryStream;
-  SL: TStringList;
-  CRC: Int64;
+  ms: TKMemoryStream;
+  sl: TStringList;
+  crc: Int64;
   isValid: Boolean;
 begin
-  if RunOpenDialog(OpenDialog1, '', ExeDir, 'KaM Remake statistics (*.csv)|*.csv') then
-  begin
-    isValid := False;
-    SL := TStringList.Create;
-    try
-      try
-        SL.LoadFromFile(OpenDialog1.FileName);
-        if TryStrToInt64(SL[0], CRC) then
-        begin
-          SL.Delete(0); //Delete CRC from file
-          MS := TKMemoryStreamBinary.Create;
-          try
-            MS.WriteHugeString(AnsiString(SL.Text));
-            if CRC = Adler32CRC(MS) then
-              isValid := True;
-          finally
-            FreeAndNil(MS);
-          end;
-        end;
+  if not RunOpenDialog(OpenDialog1, '', ExeDir, 'KaM Remake statistics (*.csv)|*.csv') then
+    Exit;
 
-        if isValid then
-          MessageDlg('Game statistics from file [ ' + OpenDialog1.FileName + ' ] is valid', mtInformation , [mbOK ], 0)
-        else
-          MessageDlg('Game statistics from file [ ' + OpenDialog1.FileName + ' ] is NOT valid !', mtError, [mbClose], 0);
-      except
-        on E: Exception do
-          MessageDlg('Error while validating game statistics from file [ ' + OpenDialog1.FileName + ' ] :' + EolW
-                     + E.Message, mtError, [mbClose], 0);
+  isValid := False;
+  sl := TStringList.Create;
+  try
+    try
+      sl.LoadFromFile(OpenDialog1.FileName);
+      if TryStrToInt64(sl[0], crc) then
+      begin
+        sl.Delete(0); //Delete crc from file
+        ms := TKMemoryStreamBinary.Create;
+        try
+          ms.WriteHugeString(AnsiString(sl.Text));
+          if crc = Adler32CRC(ms) then
+            isValid := True;
+        finally
+          FreeAndNil(ms);
+        end;
       end;
-    finally
-      FreeAndNil(SL);
+
+      if isValid then
+        MessageDlg('Game statistics from file [ ' + OpenDialog1.FileName + ' ] is valid', mtInformation, [mbOK], 0)
+      else
+        MessageDlg('Game statistics from file [ ' + OpenDialog1.FileName + ' ] is NOT valid !', mtError, [mbClose], 0);
+    except
+      on E: Exception do
+        MessageDlg('Error while validating game statistics from file "' + OpenDialog1.FileName + '":' + sLineBreak + E.Message, mtError, [mbClose], 0);
     end;
+  finally
+    FreeAndNil(sl);
   end;
 end;
 
