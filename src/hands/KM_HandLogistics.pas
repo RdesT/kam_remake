@@ -715,7 +715,7 @@ begin
 
   with fQueue[aI] do
   begin
-    if (DemandID = DELIVERY_NO_ID) and ((OfferID = DELIVERY_NO_ID)) then Exit;
+    if (DemandID = DELIVERY_NO_ID) and (OfferID = DELIVERY_NO_ID) then Exit;
     if (DemandWare = wtNone) and (OfferWare = wtNone) then Exit;
 
     if (DemandID <> DELIVERY_NO_ID)
@@ -946,7 +946,7 @@ end;
 function TKMDeliveries.IsDeliveryAlowed(aIQ: Integer): Boolean;
 begin
   if (fQueue[aIQ].DemandID <> DELIVERY_NO_ID) and (fQueue[aIQ].DemandWare <> wtNone) then
-    Result := not fDemand[fQueue[aIQ].DemandWare, fQueue[aIQ].DemandId].IsDeleted //Delivery could be cancelled because of Demand marked as Deleted
+    Result := not fDemand[fQueue[aIQ].DemandWare, fQueue[aIQ].DemandID].IsDeleted //Delivery could be cancelled because of Demand marked as Deleted
   else
     Result := False; //Not allowed delivery if demandId is underfined (= DELIVERY_NO_ID)
 end;
@@ -1000,10 +1000,10 @@ begin
     if (fQueue[I].DemandWare = aWare)
       and (fQueue[I].JobStatus = jsTaken) then
     begin
-      iD := fQueue[I].DemandId;
+      iD := fQueue[I].DemandID;
       if (fDemand[aWare,iD].Loc_House = aHouse)
-        and not fDemand[aWare,iD].IsDeleted
-        and (fDemand[aWare,iD].BeingPerformed > 0) then
+      and not fDemand[aWare,iD].IsDeleted
+      and (fDemand[aWare,iD].BeingPerformed > 0) then
         Inc(Result);
     end;
   end;
@@ -1217,12 +1217,12 @@ begin
   Result := (
             ( //House-House delivery should be performed only if there's a connecting road
             (demand.Loc_House <> nil) and
-            (gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalkRoad))
+            gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalkRoad)
             )
             or
             ( //House-Unit delivery can be performed without connecting road
             (demand.Loc_Unit <> nil) and
-            (gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Unit.Position, tpWalk, 1))
+            gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Unit.Position, tpWalk, 1)
             ));
 
   //If Demand house should abandon delivery
@@ -1952,7 +1952,7 @@ begin
         Form_UpdateDemandNode(oldDWT,oldDemandId);
 
         // Take new demand
-        fQueue[aDeliveryId].DemandId := bestDemandId;
+        fQueue[aDeliveryId].DemandID := bestDemandId;
         fQueue[aDeliveryId].DemandWare := bestDWT;
         Inc(fDemand[bestDWT,bestDemandId].BeingPerformed); //Places a virtual "Reserved" sign on Demand
         fQueue[aDeliveryId].IsFromUnit := True; //Now this delivery will always start from serfs hands
@@ -2190,7 +2190,7 @@ begin
   if fDemand[dWT,iD].Loc_House <> nil then
     aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_House, oWT, I)
   else
-    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Unit, oWT, I)
+    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Unit, oWT, I);
 end;
 
 
