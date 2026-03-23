@@ -225,31 +225,31 @@ begin
 end;
 
 
-function TKMUnitSpec.IsValid: boolean;
+function TKMUnitSpec.IsValid: Boolean;
 begin
   Result := not (fUnitType in [utNone, utAny]);
 end;
 
 
-function TKMUnitSpec.IsAnimal: boolean;
+function TKMUnitSpec.IsAnimal: Boolean;
 begin
   Result := fUnitType in [ANIMAL_MIN..ANIMAL_MAX];
 end;
 
 
-function TKMUnitSpec.IsCitizen: boolean;
+function TKMUnitSpec.IsCitizen: Boolean;
 begin
   Result := fUnitType in [CITIZEN_MIN..CITIZEN_MAX];
 end;
 
 
-function TKMUnitSpec.IsWarrior: boolean;
+function TKMUnitSpec.IsWarrior: Boolean;
 begin
   Result := fUnitType in [WARRIOR_MIN..WARRIOR_MAX];
 end;
 
 
-function TKMUnitSpec.IsWarriorEquipable: boolean;
+function TKMUnitSpec.IsWarriorEquipable: Boolean;
 begin
   Result := fUnitType in [WARRIOR_EQUIPABLE_BARRACKS_MIN..WARRIOR_EQUIPABLE_BARRACKS_MAX];
 end;

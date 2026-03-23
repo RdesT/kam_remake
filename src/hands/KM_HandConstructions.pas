@@ -482,7 +482,7 @@ var
   I: Integer;
 begin
   I := 0;
-  while (I < Length(fFakeFields)) and (fFakeFields[I].Active) do
+  while (I < Length(fFakeFields)) and fFakeFields[I].Active do
     Inc(I);
 
   if I >= Length(fFakeFields) then
@@ -500,7 +500,7 @@ var
   I: Integer;
 begin
   I := 0;
-  while (I < Length(fFakeDeletedFields)) and (fFakeDeletedFields[I].Active) do
+  while (I < Length(fFakeDeletedFields)) and fFakeDeletedFields[I].Active do
     Inc(I);
 
   if I >= Length(fFakeDeletedFields) then
@@ -780,11 +780,10 @@ function TKMHousePlanList.ExistPlan(const aLoc: TKMPoint; aHT: TKMHouseType): Bo
 var
   I: Integer;
 begin
-  Result := True;
   for I := 0 to fPlansCount - 1 do
     if (fPlans[I].HouseType = aHT)
-      AND KMSamePoint(  aLoc, KMPointAdd( fPlans[I].Loc, KMPoint(gRes.Houses[aHT].EntranceOffsetX,0) )  ) then
-	    Exit;
+    and KMSamePoint(aLoc, KMPointAdd( fPlans[I].Loc, KMPoint(gRes.Houses[aHT].EntranceOffsetX, 0))) then
+	    Exit(True);
   Result := False;
 end;
 
@@ -812,8 +811,7 @@ begin
   then
   begin
     aHouseType := fPlans[I].HouseType;
-    Result := True;
-    Exit;
+    Exit(True);
   end;
 end;
 
