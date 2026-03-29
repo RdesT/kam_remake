@@ -21,6 +21,7 @@ KaM Remake Beta r_____ []
 + Fixed a bug where melee units fighting ranged and melee enemies would not assist each other against nearby ranged units
 + Included Changelog.txt into the build
 + Fixed fences not disappearing when building progress is added by a script (#258)
++ Fixed crash on trying to set Actions.AIEquipRate rate to a value higher than 65535 through dynamic script
 
 
 KaM Remake Beta r16020 [2025.12.26]
