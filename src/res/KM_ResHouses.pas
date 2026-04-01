@@ -772,7 +772,7 @@ constructor TKMResHouses.Create;
     begin
       MoveX := aMoveX;
       MoveY := aMoveY;
-      Count := length(aSteps);
+      Count := Length(aSteps);
       for I := 1 to Count do
         Step[I] := aSteps[I-1];
     end;

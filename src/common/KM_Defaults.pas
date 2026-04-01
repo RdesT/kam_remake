@@ -149,7 +149,7 @@ var
                            Boolean = DEBUG_CFG; //Allow to try load saves / replay with unsupported version
 
   DBG_LOG_SETTINGS_SAVE_CALLSTACK     :Boolean = True; //todo: DEBUG. Remove after bugfix
-  DBG_DISALLOW_TO_SAVE_RANDOM_CHECKS  :Boolean = False; // Forbid saving of random checks data in to separate file (used by Runner)
+  DBG_SAVE_RANDOM_CHECKS  :Boolean = False; // Save random checks data in to separate file (for debug)
   DBG_NET_RANDOM_CHECK_EVERY_TICK     :Boolean = True; //todo: DEBUG. Remove in release, no need to check on every tick in release version
 
   DBG_KILL_GROUP_BUTTON       :Boolean = DEBUG_CFG; // The button to kill group
@@ -180,7 +180,7 @@ var
   SKIP_LOADING_CURSOR     :Boolean = False; //Skip loading and setting cursor
   SKIP_SETTINGS_SAVE      :Boolean = False; //Skip save main/game settings into the ini file
 //  SKIP_POINTER_REF_CHECK  :Boolean = False; //Skip Pointer reference check (gGame.AllowGetPointer)
-  AGGRESSIVE_REPLAYS      :Boolean = True; //Write a command gicTempDoNothing every tick in order to find exactly when a replay mismatch occurs
+  DBG_AGGRESSIVE_REPLAYS      :Boolean = True; //Write a command gicTempDoNothing every tick in order to find exactly when a replay mismatch occurs
   SHOW_GAME_TICK          :Boolean = DEBUG_CFG; //Show game tick next to game time
   SHOW_FPS                :Boolean = False; //Show FPS
   SHOW_TERRAIN_IDS        :Boolean = False; //Show number of every tile terrain on it (also show layers terrain ids)

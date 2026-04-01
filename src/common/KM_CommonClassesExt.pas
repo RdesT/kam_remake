@@ -48,8 +48,6 @@ type
 
   TKMLimitedUniqueList<T> = class(TKMLimitedList<T>)
   public
-    constructor Create(aMaxLength: Integer);
-
     function Add(const Value: T): Integer; reintroduce;
   end;
 
@@ -259,12 +257,6 @@ end;
 
 
 { TKMLimitedUniqueList }
-constructor TKMLimitedUniqueList<T>.Create(aMaxLength: Integer);
-begin
-  inherited Create(aMaxLength);
-end;
-
-
 function TKMLimitedUniqueList<T>.Add(const Value: T): Integer;
 begin
   if Contains(Value) then Exit(0);

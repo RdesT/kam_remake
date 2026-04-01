@@ -10,10 +10,10 @@ uses
   {$IFDEF USE_VIRTUAL_TREEVIEW}VirtualTrees, {$ENDIF}
 
   {$IFDEF USE_HASH}
-  Generics.Collections, Generics.Defaults, System.Hash,
+  System.Generics.Collections, System.Generics.Defaults, System.Hash,
   {$ENDIF}
-  Math,
-  KM_Units, KM_Houses, KM_ResHouses,
+  System.Math,
+  KM_Units, KM_Houses,
   KM_HandEntity, KM_HandTypes,
   KM_CommonClasses, KM_Defaults, KM_Points,
   BinaryHeapGen,
@@ -362,13 +362,13 @@ const
 
 implementation
 uses
-  Classes, SysUtils, TypInfo,
+  System.Classes, System.SysUtils, System.TypInfo,
   KM_Entity,
   KM_Terrain,
   KM_FormLogistics, KM_UnitTaskDelivery,
   KM_Main, KM_Game, KM_GameParams, KM_Hand, KM_HandsCollection, KM_HouseBarracks, KM_HouseStore,
   KM_UnitWarrior,
-  KM_Resource, KM_ResUnits,
+  KM_Resource, KM_ResHouses, KM_ResUnits,
   KM_Log, KM_Utils, KM_CommonUtils, KM_DevPerfLog, KM_DevPerfLogTypes;
 
 
@@ -388,6 +388,8 @@ const
 { TKMHandLogistics }
 constructor TKMHandLogistics.Create(aHandIndex: TKMHandID);
 begin
+  inherited Create;
+
   fQueue := TKMDeliveries.Create(aHandIndex);
 end;
 
@@ -395,6 +397,7 @@ end;
 destructor TKMHandLogistics.Destroy;
 begin
   FreeAndNil(fQueue);
+
   inherited;
 end;
 
@@ -403,7 +406,7 @@ procedure TKMHandLogistics.Save(SaveStream: TKMemoryStream);
 var
   I: Integer;
 begin
-  SaveStream.PlaceMarker('SerfList');
+  SaveStream.PlaceMarker('TKMHandLogistics');
 
   SaveStream.Write(fSerfCount);
   for I := 0 to fSerfCount - 1 do
@@ -417,7 +420,7 @@ procedure TKMHandLogistics.Load(LoadStream: TKMemoryStream);
 var
   I: Integer;
 begin
-  LoadStream.CheckMarker('SerfList');
+  LoadStream.CheckMarker('TKMHandLogistics');
 
   LoadStream.Read(fSerfCount);
   SetLength(fSerfs, fSerfCount);
@@ -613,6 +616,8 @@ constructor TKMDeliveries.Create(aHandIndex: TKMHandID);
 const
   INIT_BIDS_HEAP_SIZE = 100;
 begin
+  inherited Create;
+
   fOwner := aHandIndex;
 
   fRouteEvaluator := TKMDeliveryRouteEvaluator.Create;
@@ -626,9 +631,9 @@ end;
 
 destructor TKMDeliveries.Destroy;
 begin
-  fBestBids.Free;
-  fBestBidCandidates.Free;
-  fRouteEvaluator.Free;
+  FreeAndNil(fBestBids);
+  FreeAndNil(fBestBidCandidates);
+  FreeAndNil(fRouteEvaluator);
 
   inherited;
 end;
@@ -710,7 +715,7 @@ begin
 
   with fQueue[aI] do
   begin
-    if (DemandID = DELIVERY_NO_ID) and ((OfferID = DELIVERY_NO_ID)) then Exit;
+    if (DemandID = DELIVERY_NO_ID) and (OfferID = DELIVERY_NO_ID) then Exit;
     if (DemandWare = wtNone) and (OfferWare = wtNone) then Exit;
 
     if (DemandID <> DELIVERY_NO_ID)
@@ -941,7 +946,7 @@ end;
 function TKMDeliveries.IsDeliveryAlowed(aIQ: Integer): Boolean;
 begin
   if (fQueue[aIQ].DemandID <> DELIVERY_NO_ID) and (fQueue[aIQ].DemandWare <> wtNone) then
-    Result := not fDemand[fQueue[aIQ].DemandWare, fQueue[aIQ].DemandId].IsDeleted //Delivery could be cancelled because of Demand marked as Deleted
+    Result := not fDemand[fQueue[aIQ].DemandWare, fQueue[aIQ].DemandID].IsDeleted //Delivery could be cancelled because of Demand marked as Deleted
   else
     Result := False; //Not allowed delivery if demandId is underfined (= DELIVERY_NO_ID)
 end;
@@ -995,10 +1000,10 @@ begin
     if (fQueue[I].DemandWare = aWare)
       and (fQueue[I].JobStatus = jsTaken) then
     begin
-      iD := fQueue[I].DemandId;
+      iD := fQueue[I].DemandID;
       if (fDemand[aWare,iD].Loc_House = aHouse)
-        and not fDemand[aWare,iD].IsDeleted
-        and (fDemand[aWare,iD].BeingPerformed > 0) then
+      and not fDemand[aWare,iD].IsDeleted
+      and (fDemand[aWare,iD].BeingPerformed > 0) then
         Inc(Result);
     end;
   end;
@@ -1212,12 +1217,12 @@ begin
   Result := (
             ( //House-House delivery should be performed only if there's a connecting road
             (demand.Loc_House <> nil) and
-            (gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalkRoad))
+            gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_House.PointBelowEntrance, tpWalkRoad)
             )
             or
             ( //House-Unit delivery can be performed without connecting road
             (demand.Loc_Unit <> nil) and
-            (gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Unit.Position, tpWalk, 1))
+            gTerrain.RouteCanBeMade(offer.Loc_House.PointBelowEntrance, demand.Loc_Unit.Position, tpWalk, 1)
             ));
 
   //If Demand house should abandon delivery
@@ -1765,6 +1770,7 @@ begin
   end;
 end;
 
+
 // Find best Demand for the given delivery. Could return same or nothing
 procedure TKMDeliveries.DeliveryFindBestDemand(aSerf: TKMUnitSerf; aDeliveryId: Integer; aWare: TKMWareType;
                                                out aToHouse: TKMHouse; out aToUnit: TKMUnit; out aForceDelivery: Boolean);
@@ -1946,7 +1952,7 @@ begin
         Form_UpdateDemandNode(oldDWT,oldDemandId);
 
         // Take new demand
-        fQueue[aDeliveryId].DemandId := bestDemandId;
+        fQueue[aDeliveryId].DemandID := bestDemandId;
         fQueue[aDeliveryId].DemandWare := bestDWT;
         Inc(fDemand[bestDWT,bestDemandId].BeingPerformed); //Places a virtual "Reserved" sign on Demand
         fQueue[aDeliveryId].IsFromUnit := True; //Now this delivery will always start from serfs hands
@@ -2184,7 +2190,7 @@ begin
   if fDemand[dWT,iD].Loc_House <> nil then
     aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_House, oWT, I)
   else
-    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Unit, oWT, I)
+    aSerf.Deliver(fOffer[oWT,iO].Loc_House, fDemand[dWT,iD].Loc_Unit, oWT, I);
 end;
 
 
@@ -2407,7 +2413,6 @@ begin
   end;
 
   SaveStream.PlaceMarker('Queue');
-
   SaveStream.Write(fQueueCount);
   for I := 0 to fQueueCount - 1 do
     with fQueue[I] do
@@ -2595,8 +2600,7 @@ end;
 
 
 {$IFDEF USE_HASH}
-{ TKMDeliveryBidKeyComparer }
-
+{ TKMDeliveryRouteBidKeyEqualityComparer }
 function TKMDeliveryRouteBidKeyEqualityComparer.Equals(const Left, Right: TKMDeliveryRouteBidKey): Boolean;
 begin
   // path keys are equal if they have same ends
@@ -2615,9 +2619,8 @@ var
   Value: Integer;
 begin
   Result := 17;
-  for Value in Values do begin
-    Result := Result*37 + Value;
-  end;
+  for Value in Values do
+    Result := Result * 37 + Value;
 end;
 {$IFDEF OverflowChecksEnabled}
   {$Q+}
@@ -2648,7 +2651,7 @@ begin
 end;
 
 
-{ TKMDeliveryCache }
+{ TKMDeliveryRouteCache }
 procedure TKMDeliveryRouteCache.Add(const aKey: TKMDeliveryRouteBidKey; const aValue: Single; const aRouteStep: TKMDeliveryRouteStep); //; const aTimeToLive: Word);
 var
   bid: TKMDeliveryRouteBid;
@@ -2673,8 +2676,10 @@ begin
   if not CACHE_DELIVERY_BIDS then Exit;
   {$ENDIF}
 
+  key := default(TKMDeliveryRouteBidKey);
   key.FromP := FromP;
   key.ToP := ToP;
+  //key.Pass is not initialized .. not sure if that is a bug or not
   bid.Value := aValue;
   bid.RouteStep := aKind;
   bid.CreatedAt := gGameParams.Tick;
@@ -2701,10 +2706,10 @@ begin
       Exit(True); // We found value
   end;
 end;
-
 {$ENDIF}
 
-{ TKMDeliveryBidKey }
+
+{ TKMDeliveryRouteBidKey }
 function TKMDeliveryRouteBidKey.GetHashCode: Integer;
 var
   total: Int64;
@@ -2720,7 +2725,7 @@ begin
 end;
 
 
-{ TKMDeliveryBid }
+{ TKMDeliveryRouteBid }
 function TKMDeliveryRouteBid.GetTTL: Integer;
 begin
   Result := 0;
@@ -2938,7 +2943,6 @@ begin
   {$ENDIF}
 
   {$IFDEF USE_HASH}
-
   LoadStream.CheckMarker('DeliveryRouteEvaluator');
   LoadStream.Read(fUpdatesCnt);
   fBidsRoutesCache.Clear;

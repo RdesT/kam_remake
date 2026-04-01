@@ -58,7 +58,6 @@ type
       TextPos: TKMBriefingCorner;
     end;
 
-    constructor Create;
     destructor Destroy; override;
 
     procedure LoadCMP(const filePath: UnicodeString);
@@ -74,7 +73,7 @@ type
 
     function GetCampaignTitle: UnicodeString;
     function GetCampaignDescription: UnicodeString;
-    function GetCampaignMissionTitle(aIndex: Byte): String;
+    function GetCampaignMissionTitle(aIndex: Byte): string;
   end;
 
 
@@ -94,7 +93,7 @@ type
 
     procedure SetUnlockedMission(aValue: Integer);
 
-    function GetCampaignProgressFilePath(): String;
+    function GetCampaignProgressFilePath(): string;
 
     procedure Lock;
     procedure Unlock;
@@ -138,11 +137,11 @@ type
     property Spec: TKMCampaignSpec read GetSpec;
     property SavedData: TKMCampaignSavedData read fSavedData;
 
-    function GetMissionFile(aIndex: Byte; const aExt: UnicodeString = '.dat'): String;
-    function GetMissionName(aIndex: Byte): String;
-    function GetMissionTitle(aIndex: Byte): String;
-    function GetMissionBriefing(aIndex: Byte): String;
-    function GetBriefingAudioFile(aIndex: Byte): String;
+    function GetMissionFile(aIndex: Byte; const aExt: UnicodeString = '.dat'): string;
+    function GetMissionName(aIndex: Byte): string;
+    function GetMissionTitle(aIndex: Byte): string;
+    function GetMissionBriefing(aIndex: Byte): string;
+    function GetBriefingAudioFile(aIndex: Byte): string;
     function GetCampaignDataScriptFilePath: UnicodeString;
 
     procedure UnlockNextMission(aCurrentMission: Word);
@@ -466,12 +465,6 @@ end;
 
 
 { TKMCampaignSpec }
-constructor TKMCampaignSpec.Create;
-begin
-  inherited;
-end;
-
-
 destructor TKMCampaignSpec.Destroy;
 begin
   FreeAndNil(fTextLib);
@@ -541,7 +534,7 @@ end;
 //It should be private, but it is used by CampaignBuilder
 procedure TKMCampaignSpec.LoadFromFile(const aDir, aFileName: UnicodeString);
 var
-  filePath: String;
+  filePath: string;
 begin
   filePath := aDir + aFileName;
   if not FileExists(filePath) then Exit;
@@ -648,7 +641,7 @@ begin
 end;
 
 
-function TKMCampaignSpec.GetCampaignMissionTitle(aIndex: Byte): String;
+function TKMCampaignSpec.GetCampaignMissionTitle(aIndex: Byte): string;
 const
   MISS_TEMPL_ID = 3; //We have template for mission name in 3:
 begin
@@ -702,7 +695,7 @@ begin
 end;
 
 
-function TKMCampaignSavedData.GetCampaignProgressFilePath(): String;
+function TKMCampaignSavedData.GetCampaignProgressFilePath(): string;
 begin
   Result := ExeDir + SAVES_CMP_FOLDER_NAME + PathDelim + fCampaignSpec.IdStr + '.xml';
 end;
@@ -1014,19 +1007,19 @@ begin
 end;
 
 
-function TKMCampaign.GetMissionFile(aIndex: Byte; const aExt: UnicodeString = '.dat'): String;
+function TKMCampaign.GetMissionFile(aIndex: Byte; const aExt: UnicodeString = '.dat'): string;
 begin
   Result := TKMCampaignUtils.GetMissionFile(fPath, fSpec.IdStr, aIndex, aExt);
 end;
 
 
-function TKMCampaign.GetMissionName(aIndex: Byte): String;
+function TKMCampaign.GetMissionName(aIndex: Byte): string;
 begin
   Result := TKMCampaignUtils.GetMissionName(fSpec.IdStr, aIndex);
 end;
 
 
-function TKMCampaign.GetMissionTitle(aIndex: Byte): String;
+function TKMCampaign.GetMissionTitle(aIndex: Byte): string;
 begin
   if fSpec.TextLib[1] <> '' then
     Result := Format(fSpec.TextLib[1], [aIndex+1]) //Save it for Legacy support
@@ -1037,14 +1030,14 @@ end;
 
 //Mission texts of original campaigns are available in all languages,
 //custom campaigns are unlikely to have more texts in more than 1-2 languages
-function TKMCampaign.GetMissionBriefing(aIndex: Byte): String;
+function TKMCampaign.GetMissionBriefing(aIndex: Byte): string;
 begin
   Result := fSpec.TextLib[10 + aIndex];
 end;
 
 
 // aIndex starts from 0
-function TKMCampaign.GetBriefingAudioFile(aIndex: Byte): String;
+function TKMCampaign.GetBriefingAudioFile(aIndex: Byte): string;
 
   function GetBriefingPath(aLocale: AnsiString): string;
   begin
@@ -1064,7 +1057,6 @@ begin
   if not FileExists(Result) then
     Result := GetBriefingPath(gResLocales.DefaultLocale);
 end;
-
 
 
 { TKMCampaignsScanner }

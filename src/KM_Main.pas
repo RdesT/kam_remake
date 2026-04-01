@@ -438,8 +438,7 @@ begin
     // Do not call gMain.Stop from FormClose handler again
     fFormMain.OnClose := nil;
 
-    if Assigned(gVideoPlayer) then
-      gVideoPlayer.Free;
+    FreeAndNil(gVideoPlayer);
 
     // fFormMain.DevSettingsSave; Moved into MainForm itself, since it's purely MainForms business. Rest of the app should know nothing about it
 

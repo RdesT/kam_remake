@@ -458,7 +458,7 @@ uses
 
 procedure ExportDone(aResourceName: String);
 begin
-  MessageDlg(Format(gResTexts[TX_RESOURCE_EXPORT_DONE_MSG], [aResourceName]), mtInformation, [mbOk], 0);
+  MessageDlg(Format(gResTexts[TX_RESOURCE_EXPORT_DONE_MSG], [aResourceName]), mtInformation, [mbOK], 0);
 end;
 
 
@@ -920,13 +920,13 @@ end;
 
 procedure TFormMain.Export_GUIClick(Sender: TObject);
 begin
-  fResExporter.ExportSpritesFromRXXToPNG(rxGUI, ExportDone);
+  fResExporter.ExportSpritesFromRXXToPNG(rxGui, ExportDone);
 end;
 
 
 procedure TFormMain.Export_GUIMainRXClick(Sender: TObject);
 begin
-  fResExporter.ExportSpritesFromRXXToPNG(rxGUIMain, ExportDone);
+  fResExporter.ExportSpritesFromRXXToPNG(rxGuiMain, ExportDone);
 end;
 
 
@@ -1504,11 +1504,9 @@ begin
                     showCtrls := True;
                     showGroupBox := True;
                   end;
-    else
-    begin
-      showCtrls := False;
-      showGroupBox := False;
-    end;
+  else
+    showCtrls := False;
+    showGroupBox := False;
   end;
 
 
@@ -1876,43 +1874,42 @@ end;
 
 procedure TFormMain.ValidateGameStatsClick(Sender: TObject);
 var
-  MS: TKMemoryStream;
-  SL: TStringList;
-  CRC: Int64;
+  ms: TKMemoryStream;
+  sl: TStringList;
+  crc: Int64;
   isValid: Boolean;
 begin
-  if RunOpenDialog(OpenDialog1, '', ExeDir, 'KaM Remake statistics (*.csv)|*.csv') then
-  begin
-    isValid := False;
-    SL := TStringList.Create;
-    try
-      try
-        SL.LoadFromFile(OpenDialog1.FileName);
-        if TryStrToInt64(SL[0], CRC) then
-        begin
-          SL.Delete(0); //Delete CRC from file
-          MS := TKMemoryStreamBinary.Create;
-          try
-            MS.WriteHugeString(AnsiString(SL.Text));
-            if CRC = Adler32CRC(MS) then
-              isValid := True;
-          finally
-            FreeAndNil(MS);
-          end;
-        end;
+  if not RunOpenDialog(OpenDialog1, '', ExeDir, 'KaM Remake statistics (*.csv)|*.csv') then
+    Exit;
 
-        if isValid then
-          MessageDlg('Game statistics from file [ ' + OpenDialog1.FileName + ' ] is valid', mtInformation , [mbOK ], 0)
-        else
-          MessageDlg('Game statistics from file [ ' + OpenDialog1.FileName + ' ] is NOT valid !', mtError, [mbClose], 0);
-      except
-        on E: Exception do
-          MessageDlg('Error while validating game statistics from file [ ' + OpenDialog1.FileName + ' ] :' + EolW
-                     + E.Message, mtError, [mbClose], 0);
+  isValid := False;
+  sl := TStringList.Create;
+  try
+    try
+      sl.LoadFromFile(OpenDialog1.FileName);
+      if TryStrToInt64(sl[0], crc) then
+      begin
+        sl.Delete(0); //Delete crc from file
+        ms := TKMemoryStreamBinary.Create;
+        try
+          ms.WriteHugeString(AnsiString(sl.Text));
+          if crc = Adler32CRC(ms) then
+            isValid := True;
+        finally
+          FreeAndNil(ms);
+        end;
       end;
-    finally
-      FreeAndNil(SL);
+
+      if isValid then
+        MessageDlg('Game statistics from file [ ' + OpenDialog1.FileName + ' ] is valid', mtInformation, [mbOK], 0)
+      else
+        MessageDlg('Game statistics from file [ ' + OpenDialog1.FileName + ' ] is NOT valid !', mtError, [mbClose], 0);
+    except
+      on E: Exception do
+        MessageDlg('Error while validating game statistics from file "' + OpenDialog1.FileName + '":' + sLineBreak + E.Message, mtError, [mbClose], 0);
     end;
+  finally
+    FreeAndNil(sl);
   end;
 end;
 
@@ -1927,8 +1924,8 @@ function TFormMain.GetWindowParams: TKMWindowParamsRecord;
     {$IFDEF MSWINDOWS}
     var AppData: TAppBarData;
     // 'Shell_TrayWnd' is the name of the task bar's window
-    AppData.Hwnd := FindWindow('Shell_TrayWnd', nil);
-    if AppData.Hwnd <> 0 then
+    AppData.hWnd := FindWindow('Shell_TrayWnd', nil);
+    if AppData.hWnd <> 0 then
     begin
       AppData.cbSize := SizeOf(TAppBarData);
       // SHAppBarMessage will return False (0) when an error happens.
@@ -1990,7 +1987,6 @@ begin
 end;
 
 
-
 {$IFDEF MSWindows}
 procedure TFormMain.WMSysCommand(var Msg: TWMSysCommand);
 begin
@@ -2026,12 +2022,12 @@ var
 begin
   shiftState := [];
   {$IFDEF WDC}
-  uDevice := GET_DEVICE_LPARAM(Msg.lParam);
+  uDevice := GET_DEVICE_LPARAM(Msg.LParam);
   if uDevice = FAPPCOMMAND_MOUSE then
   begin
-    dwKeys := GET_KEYSTATE_LPARAM(Msg.lParam);
+    dwKeys := GET_KEYSTATE_LPARAM(Msg.LParam);
     shiftState := GetShiftState(dwKeys);
-    cmd := GET_APPCOMMAND_LPARAM(Msg.lParam);
+    cmd := GET_APPCOMMAND_LPARAM(Msg.LParam);
     case cmd of
        APPCOMMAND_BROWSER_FORWARD:  FormKeyUpProc(VK_XBUTTON1, shiftState);
        APPCOMMAND_BROWSER_BACKWARD: FormKeyUpProc(VK_XBUTTON2, shiftState);
@@ -2050,7 +2046,8 @@ procedure TFormMain.WndProc(var Message: TMessage);
 begin
   if (Message.Msg = WM_SYSCOMMAND)
   and (Message.WParam = SC_KEYMENU)
-  and SuppressAltForMenu then Exit;
+  and SuppressAltForMenu then
+    Exit;
 
   inherited;
 end;
@@ -2141,7 +2138,7 @@ begin
 
         key := Msg.wParam;
 
-        FormKeyDownProc(Key, shiftState, prevState = 0);
+        FormKeyDownProc(key, shiftState, prevState = 0);
       end;
   end;
 end;

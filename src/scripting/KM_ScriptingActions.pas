@@ -1759,15 +1759,23 @@ end;
 procedure TKMScriptActions.AIEquipRate(aHand: Byte; aType: Byte; aRate: Integer);
 begin
   try
-    if InRange(aHand, 0, gHands.Count - 1) and gHands[aHand].Enabled then
-      case aType of
-        0:    gHands[aHand].AI.Setup.EquipRateLeather := aRate;
-        1:    gHands[aHand].AI.Setup.EquipRateIron := aRate;
-      else
-        LogIntParamWarn('Actions.AIEquipRate, unknown type', [aHand, aType, aRate]);
-      end
+    // We must check all input arguments
+    if not InRange(aHand, 0, gHands.Count - 1) then
+      LogIntParamWarn('Actions.AIEquipRate non-existing Hand', [aHand, aType, aRate])
     else
-      LogIntParamWarn('Actions.AIEquipRate', [aHand, aType, aRate]);
+    if not gHands[aHand].Enabled then
+      LogIntParamWarn('Actions.AIEquipRate disabled Hand', [aHand, aType, aRate])
+    else
+    if not InRange(aType, 0, 1) then
+      LogIntParamWarn('Actions.AIEquipRate unknown type', [aHand, aType, aRate])
+    else
+    if not InRange(aRate, 0, 65535) then
+      LogIntParamWarn('Actions.AIEquipRate unsupported rate', [aHand, aType, aRate])
+    else
+      case aType of
+        0:  gHands[aHand].AI.Setup.EquipRateLeather := aRate;
+        1:  gHands[aHand].AI.Setup.EquipRateIron := aRate;
+      end;
   except
     gScriptEvents.ExceptionOutsideScript := True; //Don't blame script for this exception
     raise;
@@ -2832,7 +2840,7 @@ begin
           H.IncBuildingProgress;
         end;
 
-        if H.IsStone and (gTerrain.Land^[H.Position.Y, H.Position.X].TileLock <> tlHouse) then
+        if (H.IsStone or H.IsComplete) and (gTerrain.Land^[H.Position.Y, H.Position.X].TileLock <> tlHouse) then
           gTerrain.SetHouse(H.Position, H.HouseType, hsBuilt, H.Owner);
       end;
     end

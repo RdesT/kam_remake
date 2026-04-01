@@ -1392,7 +1392,7 @@ begin
   DoLogKamRandom(aValue, aCaller, aKaMRandomFunc);
 
   {$IFDEF DBG_RNG_SPY}
-  if not DBG_DISALLOW_TO_SAVE_RANDOM_CHECKS and (gRandomCheckLogger <> nil) then
+  if DBG_SAVE_RANDOM_CHECKS and (gRandomCheckLogger <> nil) then
     gRandomCheckLogger.AddToLog(aCaller, aValue, fKaMSeed);
   {$ENDIF}
 end;
@@ -1403,7 +1403,7 @@ begin
   DoLogKamRandom(aValue, aCaller, aKaMRandomFunc);
 
   {$IFDEF DBG_RNG_SPY}
-  if not DBG_DISALLOW_TO_SAVE_RANDOM_CHECKS and (gRandomCheckLogger <> nil) then
+  if DBG_SAVE_RANDOM_CHECKS and (gRandomCheckLogger <> nil) then
     gRandomCheckLogger.AddToLog(aCaller, aValue, fKaMSeed);
   {$ENDIF}
 end;
@@ -1414,7 +1414,7 @@ begin
   DoLogKamRandom(aValue, aCaller, aKaMRandomFunc);
 
   {$IFDEF DBG_RNG_SPY}
-  if not DBG_DISALLOW_TO_SAVE_RANDOM_CHECKS and (gRandomCheckLogger <> nil) then
+  if DBG_SAVE_RANDOM_CHECKS and (gRandomCheckLogger <> nil) then
     gRandomCheckLogger.AddToLog(aCaller, aValue, fKaMSeed);
   {$ENDIF}
 end;
@@ -1850,7 +1850,7 @@ begin
   rightSide := Length(aStr);
   while (rightSide >= 1) and (aStr[rightSide] = aChar) do Dec(rightSide);
 
-  Result := Copy(aStr, leftSide, rightSide - leftSide + 1)
+  Result := Copy(aStr, leftSide, rightSide - leftSide + 1);
 end;
 
 
@@ -1873,6 +1873,7 @@ begin
   for I := Low(StrArray) to High(StrArray) do
     aStrings.Add(StrArray[I]);
 end;
+
 
 function StrSplitA(const aStr, aDelimiters: String): TAnsiStringArray;
 var
@@ -1942,6 +1943,7 @@ begin
   SetLength(Arr, ALength - 1);
 end;
 {$ELSE}
+
 
 procedure DeleteFromArray(var Arr: TAnsiStringArray; const Index: Integer);
 begin

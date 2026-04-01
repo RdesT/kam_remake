@@ -127,7 +127,7 @@ begin
 end;
 
 
-function TKMCommandsPack.GetItem(aIndex:integer): TKMGameInputCommand;
+function TKMCommandsPack.GetItem(aIndex: Integer): TKMGameInputCommand;
 begin
   Result := fItems[aIndex];
 end;
@@ -256,7 +256,7 @@ procedure TKMGameInputProcess_Multi.WaitingForConfirmation(aTick: Cardinal);
 begin
   //This is a notification that the game is waiting for a tick to be ready
   if fNumberConsecutiveWaits < High(fNumberConsecutiveWaits) then
-    inc(fNumberConsecutiveWaits);
+    Inc(fNumberConsecutiveWaits);
   //Mostly unused at the moment, could be used later for e.g. better fDelay calculation.
 end;
 

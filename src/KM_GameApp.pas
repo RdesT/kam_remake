@@ -204,7 +204,7 @@ begin
   gCursor := TKMCursor.Create;
 
   {$IFDEF DBG_RNG_SPY}
-  if gGameSettings.DebugSaveRandomChecks and not DBG_DISALLOW_TO_SAVE_RANDOM_CHECKS then
+  if gGameSettings.DebugSaveRandomChecks and DBG_SAVE_RANDOM_CHECKS then
     gRandomCheckLogger := TKMRandomCheckLogger.Create;
   {$ENDIF}
 
@@ -217,7 +217,7 @@ begin
   if gRender.IsOldGLVersion then
     //MessageDlg works better than Application.MessageBox or others, it stays on top and
     //pauses here until the user clicks ok.
-    MessageDlg(gResTexts[TX_GAME_ERROR_OLD_OPENGL] + EolW + EolW + gResTexts[TX_GAME_ERROR_OLD_OPENGL_2], mtWarning, [mbOk], 0);
+    MessageDlg(gResTexts[TX_GAME_ERROR_OLD_OPENGL] + EolW + EolW + gResTexts[TX_GAME_ERROR_OLD_OPENGL_2], mtWarning, [mbOK], 0);
 
   gSoundPlayer  := TKMSoundPlayer.Create(gGameSettings.SFX.SoundFXVolume);
   gMusic        := TKMMusicLib.Create(gGameSettings.SFX.MusicVolume);
