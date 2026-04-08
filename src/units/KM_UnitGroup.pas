@@ -976,7 +976,7 @@ var
   U: TKMUnitWarrior;
   pushbackLimit: Word;
   pushbackLimitReached: Boolean;
-  reordered;
+  reordered: Boolean;
 begin
   orderExecuted := False;
   reordered := False;
